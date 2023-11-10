@@ -38,7 +38,7 @@
         <welcome-file>faces/login.xhtml</welcome-file>
     </welcome-file-list>
     <!--Seguridad-->
-    <security-constraint>
+  <!--  <security-constraint>
         <web-resource-collection>
             <web-resource-name>SecureResources</web-resource-name>
             <url-pattern>/resources/*</url-pattern>
@@ -55,5 +55,5 @@
 
     <security-role>
         <role-name>ADMIN</role-name>
-    </security-role>
+    </security-role>-->
 </web-app>

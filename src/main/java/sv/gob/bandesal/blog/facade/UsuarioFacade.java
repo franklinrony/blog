@@ -4,6 +4,8 @@
  */
 package sv.gob.bandesal.blog.facade;
 
+import com.password4j.Hash;
+import com.password4j.Password;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -43,7 +45,9 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
 
     public boolean authenticateUser(String username, String password) {
         Usuario user = getUserByUsername(username);
-        return user != null && user.getPassword().equals(password);
+        boolean verified = Password.check(password, user.getPassword()).withArgon2();
+        return verified;
+        //return user != null && user.getPassword().equals(password);
     }
 
 }

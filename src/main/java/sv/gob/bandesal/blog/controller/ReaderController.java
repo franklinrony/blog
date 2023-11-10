@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import org.primefaces.PrimeFaces;
@@ -90,26 +92,30 @@ public class ReaderController implements Serializable {
         }
     }
 
-public void borrar(){
-    try {
-        if (!validar()) {
-            //Borrar el objeto
-            readerFacade.remove(readerSeleccionado);
-            JsfUtil.addSuccessMessage("Reader borrado correctamente");
-            PrimeFaces.current().ajax().update("growl");
-            init();
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-        JsfUtil.addErrorMessage("Ocurrio un error al intentar borrar el reader, contacte al administrador.");
+    public void borrar() {
+        try {
+            if (!validar()) {
+                //Borrar el objeto
+                readerFacade.remove(readerSeleccionado);
+                JsfUtil.addSuccessMessage("Reader borrado correctamente");
+                PrimeFaces.current().ajax().update("growl");
+                init();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JsfUtil.addErrorMessage("Ocurrio un error al intentar borrar el reader, contacte al administrador.");
 
+        }
     }
-}
+
     /**
      * Validacion antes de guardar
      */
     private boolean validar() {
         boolean errores = false;
+//Probar expresion regular
+        Pattern pattern = Pattern.compile("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(readerSeleccionado.getName());
         for (Reader readerAgregar : listaReaders) {
             if (readerAgregar != readerSeleccionado) {
                 if (readerAgregar.getName().toUpperCase()
@@ -122,6 +128,10 @@ public void borrar(){
         }
         if (readerSeleccionado.getName().isEmpty()) {
             JsfUtil.addErrorMessage("El nombre no puede estar vacio.");
+            errores = true;
+        }
+        if (!matcher.matches()) {
+            JsfUtil.addErrorMessage("El nombre solamente puede contener caracteres Alfabeticos.");
             errores = true;
         }
         return errores;

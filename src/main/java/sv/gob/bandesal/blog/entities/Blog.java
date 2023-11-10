@@ -1,5 +1,6 @@
 package sv.gob.bandesal.blog.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.List;
@@ -24,14 +25,14 @@ public class Blog implements Serializable {
 
     private String title;
 
-    //bi-directional many-to-many association to Reader
-    @ManyToMany
+    @JsonBackReference
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinTable(
             name = "BLOGS_READERS",
-             joinColumns = {
+            joinColumns = {
                 @JoinColumn(name = "BLOGS_ID")
             },
-             inverseJoinColumns = {
+            inverseJoinColumns = {
                 @JoinColumn(name = "READERS_ID")
             }
     )
@@ -46,7 +47,7 @@ public class Blog implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }   
+    }
 
     public String getDescription() {
         return this.description;
@@ -70,6 +71,31 @@ public class Blog implements Serializable {
 
     public void setReaders(List<Reader> readers) {
         this.readers = readers;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Blog)) {
+            return false;
+        }
+        Blog other = (Blog) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "sv.gob.bandesal.blog.entities.Blog[ id=" + id + " ]";
     }
 
 }

@@ -1,5 +1,6 @@
 package sv.gob.bandesal.blog.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.List;
@@ -22,8 +23,8 @@ public class Reader implements Serializable {
 
     private String name;
 
-    //bi-directional many-to-many association to Blog
-    @ManyToMany(mappedBy = "readers")
+    @JsonManagedReference
+    @ManyToMany(cascade = CascadeType.PERSIST,mappedBy = "readers", fetch =FetchType.EAGER)
     private List<Blog> blogs;
 
     public Reader() {
@@ -53,6 +54,31 @@ public class Reader implements Serializable {
 
     public void setBlogs(List<Blog> blogs) {
         this.blogs = blogs;
+    }
+
+ @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Reader)) {
+            return false;
+        }
+        Reader other = (Reader) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "sv.gob.bandesal.blog.entities.Reader[ id=" + id + " ]";
     }
 
 }

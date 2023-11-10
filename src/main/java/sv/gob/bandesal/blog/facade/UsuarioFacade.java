@@ -7,6 +7,7 @@ package sv.gob.bandesal.blog.facade;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import sv.gob.bandesal.blog.entities.Usuario;
 
 /**
@@ -32,5 +33,17 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
         return em;
     }
 
-   
+    private Usuario getUserByUsername(String user) {
+        Usuario usuario = new Usuario();
+        Query q = em.createQuery("SELECT u FROM Usuario u WHERE u.usuario=:usuario");
+        q.setParameter("usuario", user);
+        usuario = (Usuario) q.getSingleResult();
+        return usuario;
+    }
+
+    public boolean authenticateUser(String username, String password) {
+        Usuario user = getUserByUsername(username);
+        return user != null && user.getPassword().equals(password);
+    }
+
 }

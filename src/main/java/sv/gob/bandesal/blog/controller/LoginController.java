@@ -37,7 +37,6 @@ public class LoginController implements Serializable {
     }
 
     public void login() {
-        System.out.println("Entra metodo login");
         if (!this.validar()) {
             boolean resultado = usuarioFacade.authenticateUser(usuario.getUsuario().trim(), usuario.getPassword().trim());
             if (resultado) {

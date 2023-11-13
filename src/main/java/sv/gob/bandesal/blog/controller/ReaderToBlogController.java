@@ -25,9 +25,9 @@ import sv.gob.bandesal.blog.util.JsfUtil;
  *
  * @author cash america
  */
-@Named(value = "readerToBlog")
+@Named(value = "readerToBlogController")
 @ViewScoped
-public class ReaderToBlog implements Serializable {
+public class ReaderToBlogController implements Serializable {
 
     private List<Reader> listaReaders;
     private List<Blog> listaBlogs;
@@ -43,7 +43,7 @@ public class ReaderToBlog implements Serializable {
     /**
      * Creates a new instance of ReaderToBlog
      */
-    public ReaderToBlog() {
+    public ReaderToBlogController() {
         listaBlogs = new ArrayList<>();
         listaReaders = new ArrayList<>();
         blogSeleccionado = new Blog();
@@ -68,17 +68,42 @@ public class ReaderToBlog implements Serializable {
                 JsfUtil.addErrorMessage("Reader ya ha sido agregado a este blog. Seleccione otro reader");
             } else {
                 readers.add(readerSeleccionado);
-            JsfUtil.addSuccessMessage("Reader agregado correctamente al blog");
+                JsfUtil.addSuccessMessage("Reader agregado correctamente al blog");
 
             }
             blogSeleccionado.setReaders(readers);
             blogFacade.edit(blogSeleccionado);
+            listaBlogs = blogFacade.findAll();
             PrimeFaces.current().ajax().update("growl");
             PrimeFaces.current().executeScript("PF('createEditDlg').hide();");
             init();
         } catch (Exception e) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, e);
             JsfUtil.addErrorMessage("Ocurrio un error al intentar asociar el reader al blog, contacte al administrador.");
+        }
+
+    }
+
+    public void borrar() {
+        try {
+            List<Reader> readers = this.findReadersToBlog(blogSeleccionado.getId());
+            if (readers != null) {
+                readers.remove(readerSeleccionado);
+                JsfUtil.addSuccessMessage("Reader removido correctamente del blog");
+            } else if (!readers.contains(readerSeleccionado)) {
+                JsfUtil.addErrorMessage("Usuario ya no esta registrado en el blog seleccionado");
+
+            }
+
+            blogSeleccionado.setReaders(readers);
+            blogFacade.edit(blogSeleccionado);
+            listaBlogs = blogFacade.findAll();
+            PrimeFaces.current().ajax().update("growl");
+            PrimeFaces.current().executeScript("PF('createEditDlg2').hide();");
+            init();
+        } catch (Exception e) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, e);
+            JsfUtil.addErrorMessage("Ocurrio un error al intentar quitar el reader al blog, contacte al administrador.");
         }
 
     }

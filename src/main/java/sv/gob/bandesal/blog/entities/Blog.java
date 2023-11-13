@@ -26,7 +26,7 @@ public class Blog implements Serializable {
     private String title;
 
     @JsonBackReference
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = { CascadeType.REMOVE, CascadeType.PERSIST }, fetch = FetchType.EAGER)
     @JoinTable(
             name = "BLOGS_READERS",
             joinColumns = {

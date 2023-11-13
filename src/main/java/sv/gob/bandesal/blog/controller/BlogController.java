@@ -91,7 +91,7 @@ public class BlogController implements Serializable {
 
     public void borrar() {
         try {
-            if (!validar()) {
+            if (!validarBorrar()) {
                 //Borrar el objeto
                 blogFacade.remove(blogSeleccionado);
                 JsfUtil.addSuccessMessage("Blog borrado correctamente");
@@ -103,6 +103,16 @@ public class BlogController implements Serializable {
             JsfUtil.addErrorMessage("Ocurrio un error al intentar borrar el blog, contacte al administrador.");
 
         }
+    }
+
+    private boolean validarBorrar() {
+        boolean errores = false;
+        if (!blogSeleccionado.getReaders().isEmpty()) {
+            JsfUtil.addErrorMessage("Este blog tiene  readers inscritos. Debe removerlos del blog antes de eliminarlo");
+            PrimeFaces.current().ajax().update("growl");
+            errores = true;
+        }
+        return errores;
     }
 
     /**
@@ -127,8 +137,7 @@ public class BlogController implements Serializable {
         if (blogSeleccionado.getDescription().isEmpty()) {
             JsfUtil.addErrorMessage("La descripcion no puede estar vacia.");
             errores = true;
-        }
-        else if (blogSeleccionado.getDescription().length() < 20) {
+        } else if (blogSeleccionado.getDescription().length() < 20) {
             JsfUtil.addErrorMessage("La descripcion debe ser mayor a 20 caracteres.");
             errores = true;
         }

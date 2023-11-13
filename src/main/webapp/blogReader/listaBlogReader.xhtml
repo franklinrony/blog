@@ -11,8 +11,7 @@
         <ui:define name="content">            
             <h:form id="frmBlogReader">
                 <p:panel header="Listado de Blogs">
-                    <p:dataTable   id="datalist" value="#{blogController.listaBlogs}" var="blog"  
-                                   selectionMode="single" selection="#{blogController.blogSeleccionado}"
+                    <p:dataTable   id="datalist" value="#{readerToBlogController.listaBlogs}" var="blog"                                   
                                    paginator="true"
                                    rowKey="#{blog.id}"
                                    rows="10"
@@ -44,19 +43,15 @@
 
                         <f:facet name="footer">
                             <div class="flex align-items-center justify-content-center">
-                                <p:commandButton id="btnCrear" icon="pi pi-book" styleClass="m-2"   value="Asignar readers a blog"  
-                                                 resetValues="true" actionListener="#{blogController.nuevo()}"  update=":createEditDlg frmBlogReader" oncomplete="PF('createEditDlg').show()"/>
+                                <p:commandButton id="btnCrear" icon="pi pi-book" styleClass="m-2" 
+                                                  value="Asignar readers a blog"  
+                                                 resetValues="true"   update=":createEditDlg frmBlogReader" oncomplete="PF('createEditDlg').show()"/>
                                 
-                                <p:commandButton id="btnBorrar" styleClass="ui-button-danger"  icon="pi pi-minus-circle" value="Quitar reader a blog" update=":createEditDlg frmBlogReader"  
-                                                 actionListener="#{blogController.borrar()}"  onstart="PF('blockUI').show();" oncomplete="PF('blockUI').hide();"
-                                                 disabled="#{empty blogController.blogSeleccionado}">
-                                    <p:confirm header="Confirmacion" message="¿Desea borrar el registro? #{blogController.blogSeleccionado.title}" icon="pi pi-info-circle"/>
+                                <p:commandButton id="btnBorrar" styleClass="ui-button-danger"  icon="pi pi-minus-circle" value="Quitar reader a blog" 
+                                                 update=":createEditDlg2 frmBlogReader"  oncomplete="PF('createEditDlg2').show()"                            
+                                                 >
                                 </p:commandButton>
-                                <!-- Confirmacion dialog -->
-                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
-                                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
-                                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" />
-                                </p:confirmDialog>
+                               
                             </div>
                         </f:facet>
                     </p:dataTable>
@@ -64,7 +59,7 @@
 
             </h:form>
             <ui:include src="asignarReaderBlog.xhtml"/>   
-
+   <ui:include src="quitarReaderBlog.xhtml"/>
         </ui:define>
     </ui:composition>
 </html>
